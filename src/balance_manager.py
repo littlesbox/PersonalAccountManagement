@@ -16,8 +16,7 @@ class BalanceManager:
             data[item] = float(input(f"请输入 {item} 的内容："))
         return data
 
-    def add(self):
-        data = BalanceManager.capture_input()
+    def add(self, data):
         self.balance[self.id] = BalanceItem.de_structure(data)
         self.id += 1
 
@@ -27,5 +26,6 @@ class BalanceManager:
 
 if __name__ == "__main__":
     balance_manager = BalanceManager()
-    balance_manager.add()
+    data = BalanceManager.capture_input()
+    balance_manager.add(data)
     balance_manager.display()
