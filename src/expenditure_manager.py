@@ -1,34 +1,34 @@
-from expenditure_item import ExpenditureItem
-import json
+from src.expenditure_item import ExpenditureItem
 
 class ExpenditureManager:
     def __init__(self):
         self.expenditure = {}
-        self.id = 1
+        self.em_id = 1
 
-    @staticmethod
-    def capture_input():
-        data = {}
-        with open("../table_header/expenditure.json", "r", encoding="utf-8") as f:
-            elements = json.load(f)
-            elements = elements["Header"]
-        string = input(f"请分别输入{elements}的内容：")
-        string = string.strip().split()
-        for i in range(len(elements)):
-            data[elements[i]] = string[i]
-        data["金额"] = float(data["金额"])
-        return data
-
-    def add(self):
-        data = ExpenditureManager.capture_input()
-        self.expenditure[self.id] = ExpenditureItem.de_structure(data)
-        self.id += 1
+    def add(self, data):
+        self.expenditure[self.em_id] = ExpenditureItem.de_structure(data)
+        self.em_id += 1
 
     def display(self):
         for key, value in self.expenditure.items():
             print(f"{key}: {value.to_structure()}")
 
+    def delete(self, em_id):
+        self.expenditure.pop(em_id)
+
+    def modify(self, em_id, title, value):
+        match title:
+            case "日期":
+                self.expenditure[em_id].set_date(value)
+            case "金额":
+                self.expenditure[em_id].set_amount(float(value))
+            case "支付通道":
+                self.expenditure[em_id].set_expenditure_way(value)
+            case "说明":
+                self.expenditure[em_id].set_description(value)
+
 if __name__ == '__main__':
     expenditure_manager = ExpenditureManager()
-    expenditure_manager.add()
+    data = {"日期":"20250301", "金额":-6, "支付通道":"支付宝", "说明":"晚餐"}
+    expenditure_manager.add(data)
     expenditure_manager.display()

@@ -1,6 +1,6 @@
 class BalanceItem:
     def __init__(self,
-                 date = None,
+                 date=None,
                  huabei=0,
                  baitiao=0,
                  douyinyuefu=0,
@@ -102,6 +102,31 @@ class BalanceItem:
                          "光大": self.guangda,
                          "京东钱包": self.jingdongqianbao,
                          "定期存款": self.dinqicunkuan,
+                         "理财投资": self.licaitouzi,
+                         "借出": self.jiechu}
+        return structed_data
+
+    def l_to_structure(self):
+        structed_data = {"花呗": self.huabei,
+                         "白条": self.baitiao,
+                         "抖音月付": self.douyinyuefu,
+                         "美团月付": self.meituanyuefu,
+                         "抖音放心借": self.douyinfangxinjie}
+        return structed_data
+
+    def ca_to_structure(self):
+        structed_data = {"微信": self.weixin,
+                         "余额宝": self.yu_e_bao,
+                         "浦发": self.pufa,
+                         "工商": self.gongshang,
+                         "建行": self.jianhang,
+                         "农信": self.nongxin,
+                         "光大": self.guangda,
+                         "京东钱包": self.jingdongqianbao}
+        return structed_data
+
+    def nca_to_structure(self):
+        structed_data = {"定期存款": self.dinqicunkuan,
                          "理财投资": self.licaitouzi,
                          "借出": self.jiechu}
         return structed_data
