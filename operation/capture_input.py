@@ -51,4 +51,3 @@ def b(path):
 
 if __name__ == "__main__":
     pass
-    #a = e("weixin")

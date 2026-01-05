@@ -1,13 +1,15 @@
-from src.expenditure_manager import ExpenditureManager
-from src.income_manager import IncomeManager
-from src.balance_manager import BalanceManager
-import src.capture_input as ci
-import os
-import json
+from manager.expenditure_manager import ExpenditureManager
+from manager.income_manager import IncomeManager
+from manager.balance_manager import BalanceManager
+from operation.add_data import add_data
+from operation.list_data import list_data
+from operation.modify_data import modify_data
+from operation.delete_data import delete_data
 
-expenditure_manager = ExpenditureManager()
-income_manager = IncomeManager()
-balance_manager = BalanceManager()
+
+em = ExpenditureManager()
+im = IncomeManager()
+bm = BalanceManager()
 
 while True:
 
@@ -15,101 +17,25 @@ while True:
 
     # 添加数据
     if prompt == "add":
-        while True:
-
-            table_name = input("请输入要添加的表的名字(e,i,b)，输入 # 退出添加：")
-
-            if table_name == "#":
-                break
-
-            elif table_name == "e":
-                path = os.path.join(".", "table_header", "expenditure.json")
-                with open(path, "r", encoding="utf-8") as f:
-                    elements = json.load(f)
-                    ways = elements["ExpenditureWay"]
-                    #print(ways)
-                    for item in ways:
-                        while True:
-                            data = ci.e(path, item)
-                            if data == "#":
-                                break
-                            else:
-                                expenditure_manager.add(data)
-                    print('所有支付通道均已输入完毕')
-
-            elif table_name == "i":
-                path = os.path.join(".", "table_header", "income.json")
-                while True:
-                    data = ci.i(path)
-                    if data == "#":
-                        break
-                    else:
-                        income_manager.add(data)
-
-            elif table_name == "b":
-                path = os.path.join(".", "table_header", "balance.json")
-                data = ci.b(path)
-                balance_manager.add(data)
-
-            else:
-                print("表格名请输入(e, i, b)")
+        em, im, bm = add_data(em, im, bm)
 
     # 查看数据
     elif prompt == "list":
-
-        table_name = input('请选择想要查看的表格的名字(e, i, b，all):')
-        if table_name == "e":
-            expenditure_manager.display()
-
-        elif table_name == "i":
-            income_manager.display()
-
-        elif table_name == "b":
-            balance_manager.display()
-
-        elif table_name == "all":
-            print('=' * 30 + '以下是支出表' + '=' * 70)
-            expenditure_manager.display()
-            print('=' * 30 + '以下是收入表' + '=' * 70)
-            income_manager.display()
-            print('=' * 30 + '以下是余额表' + '=' * 70)
-            balance_manager.display()
-
-        else:
-            print("表格名请输入(e, i, b)")
+        list_data(em, im, bm)
 
     #修改数据
     elif prompt == "modify":
-        table_name = input('请选择想要修改的数据所在表格的名字(e, i, b):')
-        input_id = int(input('请选择想要修改数据的input_id:'))
-        title = input('请选择想要修改数据的字段:')
-        value = input('请输入新值:')
-
-        if table_name == "e":
-            expenditure_manager.modify(input_id, title, value)
-        elif table_name == "i":
-            income_manager.modify(input_id, title, value)
-        elif table_name == "b":
-            balance_manager.modify(input_id, title, value)
-        else:
-            print("表格名请输入(e, i, b)")
+        em, im, bm = modify_data(em, im, bm)
 
     #删除数据
     elif prompt == "delete":
-        table_name = input('请选择想要删除的数据所在表格的名字(e, i, b):')
-        input_id = int(input('请选择想要删除数据的input_id:'))
-        if table_name == "e":
-            expenditure_manager.delete(input_id)
-        elif table_name == "i":
-            income_manager.delete(input_id)
-        elif table_name == "b":
-            balance_manager.delete(input_id)
-        else:
-            print("表格名请输入(e, i, b)")
+        em, im, bm = delete_data(em, im, bm)
 
     #保存数据
     elif prompt == "save":
-        pass
+        em.save()
+        im.save()
+        bm.save()
 
     #退出程序
     elif prompt == "exit":
