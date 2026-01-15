@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 import pandas as pd
+import os
 
 class BalanceManager:
     def __init__(self):
@@ -50,19 +51,49 @@ class BalanceManager:
 
     def save(self):
         base_dir = Path(__file__).resolve().parent.parent
-        output_dir = base_dir.joinpath("tables", "expenditure.csv")
+        output_dir = base_dir.joinpath("bill_data", "balance.csv")
         df = pd.DataFrame.from_dict(self.balance, orient="index")
         df["日期"] = pd.to_datetime(df["日期"], format="%Y%m%d")
         df = df.sort_values("日期")
-        df.to_csv(output_dir, index=False, encoding="utf-8-sig")
+        df['日期'] = df['日期'].dt.strftime('%Y-%m-%d')
+        if os.path.exists(output_dir):
+            csv_header = pd.read_csv(output_dir, nrows=0).columns.tolist()
+            df = df.reindex(columns=csv_header)
+            df.to_csv(
+                output_dir,
+                mode='a',
+                header=False,
+                index=False,
+                encoding="utf-8-sig"
+            )
+        else:
+            df.to_csv(
+                output_dir,
+                mode='w',
+                header=True,
+                index=False,
+                encoding="utf-8-sig"
+            )
 
+    def is_empty(self):
+        if len(self.balance) == 0:
+            return True
+        else:
+            return False
+
+    def get_ids(self):
+        return list(self.balance.keys())
+
+    def get_header(self, bm_id):
+        return list(self.balance[bm_id].keys())
 
 if __name__ == "__main__":
     balance_manager = BalanceManager()
-    data= {'日期':'20250303','花呗': 0, '白条': 0, '抖音月付': 0,
+    data= {'日期':'20500303','花呗': 0, '白条': 0, '抖音月付': 0,
            '美团月付': 0, '抖音放心借': 0, '微信': 0, 
            '余额宝': 0, '浦发': 0, '工商': 0, '建行': 0, 
-           '农信': 0, '光大': 0, '京东钱包': 0, '定期存款': 0, 
+           '农信': 0, '光大': 0, '京东钱包': 0, '农行':0, '广发':0,'定期存款': 0,
            '理财投资': 0, '借出': 0}
     balance_manager.add(data)
     balance_manager.display_class()
+    balance_manager.save()

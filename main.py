@@ -5,15 +5,18 @@ from operation.add_data import add_data
 from operation.list_data import list_data
 from operation.modify_data import modify_data
 from operation.delete_data import delete_data
-
+from investment.invest_manager import InvestManager
 
 em = ExpenditureManager()
 im = IncomeManager()
 bm = BalanceManager()
+ivm = InvestManager()
 
 while True:
 
-    prompt = input('请选择你的操作(add/list/modify/delete/save/exit):')
+    prompt = input('\n请选择你的操作(add/list/modify/delete/save)表示添加新的账单数据'
+                   '\n(insert/remove/update/view/store)表示操作当前的投资数据'
+                   '\n(exit)表示退出程序，请输入命令:')
 
     # 添加数据
     if prompt == "add":
@@ -36,10 +39,29 @@ while True:
         em.save()
         im.save()
         bm.save()
+        print("\n内容已保存，三个暂存表内容已清空")
+        em = ExpenditureManager()
+        im = IncomeManager()
+        bm = BalanceManager()
+
+    elif prompt == "view":
+        ivm.view()
+
+    elif prompt == "store":
+        ivm.store()
+
+    elif prompt == "insert":
+        ivm.insert()
+
+    elif prompt == "remove":
+        ivm.remove()
+
+    elif prompt == "update":
+        ivm.update()
 
     #退出程序
     elif prompt == "exit":
         break
 
     else:
-        print('未知命令，请重新输入')
+        print('\n未知命令，请重新输入')

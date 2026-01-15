@@ -7,7 +7,7 @@ def add_data(em, im, bm):
 
     while True:
 
-        table_name = input("请输入要添加的表的名字(e,i,b)，输入 # 退出添加：")
+        table_name = input("\n请输入要添加的表的名字(e,i,b)，输入 # 退出添加：")
 
         if table_name == "#":
             break
@@ -23,12 +23,14 @@ def add_data(em, im, bm):
                     data = ci.e(path, item)
                     if data == "#":
                         break
+                    elif len(data) == 0:
+                        print('\n输入内容有误，请重新输入')
                     else:
                         em.add(data)
-            print('所有预设支付通道均已输入完毕')
+            print('\n所有预设支付通道均已输入完毕')
 
             while True:
-                other_ways = input('是否还有其他支付通道的支出，如果有请输入支付通道，如果没有请输入 # :')
+                other_ways = input('\n是否还有其他支付通道的支出，如果有请输入支付通道，如果没有请输入 # :')
                 if other_ways == '#':
                     break
                 else:
@@ -36,6 +38,8 @@ def add_data(em, im, bm):
                         data = ci.e(path, other_ways)
                         if data == "#":
                             break
+                        elif len(data) == 0:
+                            print('\n输入内容有误，注意日期格式和金额为负以及用空格分隔，请重新输入')
                         else:
                             em.add(data)
 
@@ -46,6 +50,8 @@ def add_data(em, im, bm):
                 data = ci.i(path)
                 if data == "#":
                     break
+                elif len(data) == 0:
+                    print('\n输入内容有误，注意日期格式和金额为正以及用空格分隔，请重新输入')
                 else:
                     im.add(data)
 
@@ -55,6 +61,6 @@ def add_data(em, im, bm):
             bm.add(data)
 
         else:
-            print("表格名请输入(e, i, b)")
+            print("\n表格名请输入(e, i, b)")
 
     return em, im, bm
